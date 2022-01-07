@@ -24,7 +24,6 @@ export default class Ripple extends PureComponent {
     rippleSequential: false,
     rippleFades: true,
     disabled: false,
-    animated: true,
 
     onRippleAnimation: (animation, callback) => animation.start(callback),
   };
@@ -42,7 +41,6 @@ export default class Ripple extends PureComponent {
     rippleSequential: PropTypes.bool,
     rippleFades: PropTypes.bool,
     disabled: PropTypes.bool,
-    animated: PropTypes.bool,
 
     onRippleAnimation: PropTypes.func,
   };
@@ -90,25 +88,25 @@ export default class Ripple extends PureComponent {
 
   onPress(event) {
     let { ripples } = this.state;
-    let { onPress, rippleSequential, animated } = this.props;
+    let { onPress, rippleSequential } = this.props;
 
     if (!rippleSequential || !ripples.length) {
       if ('function' === typeof onPress) {
         requestAnimationFrame(() => onPress(event));
       }
 
-      if (animated) this.startRipple(event);
+      this.startRipple(event);
     }
   }
 
   onLongPress(event) {
-    let { onLongPress, animated } = this.props;
+    let { onLongPress } = this.props;
 
     if ('function' === typeof onLongPress) {
       requestAnimationFrame(() => onLongPress(event));
     }
 
-    if (animated) this.startRipple(event);
+    this.startRipple(event);
   }
 
   onPressIn(event) {
@@ -145,9 +143,14 @@ export default class Ripple extends PureComponent {
     let w2 = 0.5 * width;
     let h2 = 0.5 * height;
 
-    let { locationX, locationY } = rippleCentered?
-      { locationX: w2, locationY: h2 }:
-      event.nativeEvent;
+    // Animation starts from the center by default
+    let { locationX, locationY } = { locationX: w2, locationY: h2 };
+
+    // If animation must be played from the coordinates of the touch gesture and a touch event is found
+    if (!rippleCentered && event?.nativeEvent?.locationX && event?.nativeEvent?.locationY) {
+      locationX = event.nativeEvent.locationX;
+      locationY = event.nativeEvent.locationY;
+    }
 
     let offsetX = Math.abs(w2 - locationX);
     let offsetY = Math.abs(h2 - locationY);
