@@ -225,6 +225,7 @@ export default class Ripple extends PureComponent {
       accessibilityHint,
       accessibilityLabel,
       accessibilityState,
+      accessibilityRole,
 
       onPress,
       onLongPress,
@@ -254,6 +255,7 @@ export default class Ripple extends PureComponent {
       accessibilityHint,
       accessibilityLabel,
       accessibilityState,
+      accessibilityRole,
       onLayout: this.onLayout,
       onPress: this.onPress,
       onPressIn: this.onPressIn,
